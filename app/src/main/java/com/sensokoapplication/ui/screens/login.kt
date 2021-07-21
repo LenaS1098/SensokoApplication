@@ -1,13 +1,12 @@
 package com.sensokoapplication.ui.screens
 
-import android.os.Bundle
-import androidx.compose.foundation.Image
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,21 +14,26 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sensokoapplication.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 
+
+@ExperimentalFoundationApi
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
+
     Column(modifier = Modifier
-        .background(Color.Blue)) {
+        .background(MaterialTheme.colors.primary)) {
        // Image(painter = painterResource(id = R.drawable.header), contentDescription = "", contentScale = ContentScale.FillWidth )
         Column(
             modifier = Modifier
@@ -54,14 +58,37 @@ fun LoginScreen() {
             ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.padding(top = 30.dp))
-                Text(text = "Login as Transporter", fontFamily = FontFamily.Monospace)
+                Text(text = "Login", style = MaterialTheme.typography.h5)
                 Spacer(modifier = Modifier.padding(top = 30.dp))
 
-              //  var text by remember { mutableStateOf("")}
+               var email by remember { mutableStateOf("")}
 
-              // OutlinedTextField(value = text, onValueChange = {text = it}, label = { Text(text = "E-Mail")})
+              OutlinedTextField(value = email, onValueChange = {email = it}, label = { Text(text = "E-Mail")})
 
+                var password by rememberSaveable { mutableStateOf("") }
+                Spacer(Modifier.padding(top = 15.dp))
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Enter password") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                ) 
 
+                Button(onClick = {
+                    Log.e("loginDaten",email+password)
+
+                    if(email=="testmail.de"&&password=="passwort"){
+                        Log.e("login","success")
+                        navController.navigate("overview")
+                    }else{
+                        Log.e("login","fail")
+                    }
+                },
+                    modifier = Modifier.padding(top = 10.dp)
+                ) {
+                    Text("OK")
+                }
             }
         }
 
