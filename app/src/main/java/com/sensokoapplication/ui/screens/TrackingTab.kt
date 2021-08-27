@@ -19,8 +19,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sensokoapplication.Transportbox
 import com.sensokoapplication.R
+import com.sensokoapplication.db.Transportbox
 
 @Composable
 fun TrackingTab(transportbox: Transportbox){
@@ -70,8 +70,6 @@ fun TrackStepCardNoDivider(icon: Painter, label : String, data : String){
     }
 }
 
-
-
 @Composable
 fun CircleIcon(icon : Painter){
     val openDialog: MutableState<Boolean> = remember{mutableStateOf(false)}
@@ -119,8 +117,8 @@ fun TrackingStats(transportbox: Transportbox){
                     .fillMaxWidth()
                     .padding(top = 10.dp)
             ) {
-                BasicInfoBox(label = "Startpunkt", info = transportbox.origin)
-                BasicInfoBox(label = "Ankunftsziel", info = transportbox.destination)
+                BasicInfoBox(label = "Startpunkt", info = "")
+                BasicInfoBox(label = "Ankunftsziel", info = "")
                 BasicInfoBox(label = "Ankuftszeit", info = "15:12 Uhr")
             }
         }

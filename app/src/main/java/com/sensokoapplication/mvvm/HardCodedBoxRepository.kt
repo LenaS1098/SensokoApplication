@@ -1,9 +1,10 @@
+/*
 package com.sensokoapplication.mvvm
 
 import com.sensokoapplication.BoxWithKammern
 import com.sensokoapplication.Kammer
 import com.sensokoapplication.Transportbox
-
+import com.sensokoapplication.db.BoxRepository
 
 
 class HardCodedBoxRepository : BoxRepository {
@@ -34,4 +35,4 @@ class HardCodedBoxRepository : BoxRepository {
         TODO("Not yet implemented")
     }
 
-}
+}*/

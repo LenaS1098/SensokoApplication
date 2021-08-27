@@ -2,5 +2,5 @@
     <string name="app_name">SensokoApplication</string>
     <string name="box">Box</string>
     <string name="scanner">Scanner</string>
-    <string name="favorites">Favoriten</string>
+    <string name="favorites">Verlauf</string>
 </resources>

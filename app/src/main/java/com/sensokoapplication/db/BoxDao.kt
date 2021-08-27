@@ -1,11 +1,6 @@
 package com.sensokoapplication.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.sensokoapplication.BoxWithKammern
-import com.sensokoapplication.Kammer
-import com.sensokoapplication.Transportbox
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Dao
 interface BoxDao {
@@ -17,6 +12,12 @@ interface BoxDao {
 
     @Insert(onConflict =OnConflictStrategy.REPLACE)
     suspend fun insertBox(transportbox: Transportbox)
+
+    @Insert(onConflict =OnConflictStrategy.REPLACE)
+    suspend fun insertTransport(transport: Transport)
+
+    @Insert(onConflict =OnConflictStrategy.REPLACE)
+    suspend fun insertParameter(parameter: Parameter)
 
     @Insert(onConflict =OnConflictStrategy.REPLACE)
     suspend fun insertKammer(kammer: Kammer)

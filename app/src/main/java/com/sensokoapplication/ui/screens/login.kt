@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,24 +15,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sensokoapplication.BoxOverviewScaffoldNav
+import com.sensokoapplication.db.BoxViewModel
 
 
-
-@ExperimentalFoundationApi
 @Composable
-fun LoginScreen(navController: NavController) {
-
+@ExperimentalFoundationApi
+fun LoginContent(state: MutableState<Boolean>){
     Column(modifier = Modifier
         .background(MaterialTheme.colors.primary)) {
-       // Image(painter = painterResource(id = R.drawable.header), contentDescription = "", contentScale = ContentScale.FillWidth )
+        // Image(painter = painterResource(id = R.drawable.header), contentDescription = "", contentScale = ContentScale.FillWidth )
         Column(
             modifier = Modifier
                 // .background(Color.LightGray)
@@ -61,9 +55,9 @@ fun LoginScreen(navController: NavController) {
                 Text(text = "Login", style = MaterialTheme.typography.h5)
                 Spacer(modifier = Modifier.padding(top = 30.dp))
 
-               var email by remember { mutableStateOf("")}
+                var email by remember { mutableStateOf("")}
 
-              OutlinedTextField(value = email, onValueChange = {email = it}, label = { Text(text = "E-Mail")})
+                OutlinedTextField(value = email, onValueChange = {email = it}, label = { Text(text = "E-Mail")})
 
                 var password by rememberSaveable { mutableStateOf("") }
                 Spacer(Modifier.padding(top = 15.dp))
@@ -73,14 +67,15 @@ fun LoginScreen(navController: NavController) {
                     label = { Text("Enter password") },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                ) 
+                )
 
                 Button(onClick = {
                     Log.e("loginDaten",email+password)
 
                     if(email=="testmail.de"&&password=="passwort"){
                         Log.e("login","success")
-                        navController.navigate("overview")
+                        state.value = false
+                      //  navController.navigate("overview")
                     }else{
                         Log.e("login","fail")
                     }
@@ -93,6 +88,24 @@ fun LoginScreen(navController: NavController) {
         }
 
     }
+}
+
+
+@ExperimentalFoundationApi
+@Composable
+fun LoginScreen(navController: NavController = rememberNavController(), boxViewModel: BoxViewModel) {
+    //screen shown; true -> login, false -> BoxOverview
+    val state = remember { mutableStateOf(true) }
+    Scaffold() {
+        
+        BoxOverviewScaffoldNav(boxViewModel = boxViewModel)
+     /*   if(state.value){
+            LoginContent(state = state)
+        }else{
+            BoxOverviewScaffoldNav(boxViewModel = boxViewModel)
+        }*/
+    }
+
 }
 
 @Composable

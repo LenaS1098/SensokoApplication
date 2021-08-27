@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.sensokoapplication.*
 
-@Database(entities = [Transportbox::class, Kammer::class], version = 1)
+@Database(entities = [Transportbox::class, Kammer::class,Transport::class,Parameter::class], version = 1)
 abstract class BoxDatabase :RoomDatabase() {
     abstract val boxDao :BoxDao
 

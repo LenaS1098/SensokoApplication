@@ -1,6 +1,7 @@
 package com.sensokoapplication
 
 import androidx.room.*
+/*
 
 @Entity(tableName = "all_boxes")
 data class Transportbox(
@@ -43,6 +44,7 @@ data class BoxWithKammern(
     )
 
 
+*/
 
 /*
 

@@ -17,9 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.sensokoapplication.Transportbox
 import com.sensokoapplication.R
-import com.sensokoapplication.mvvm.BoxViewModel
+import com.sensokoapplication.db.BoxViewModel
+import com.sensokoapplication.db.Transportbox
 
 @Composable
 fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxViewModel: BoxViewModel){
@@ -41,7 +41,7 @@ fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxView
         Row(horizontalArrangement = Arrangement.SpaceEvenly) {
             InfoClickable(
                 label = "Temperatur",
-                info = listKammern[kammerInt].currentTemp.toString(),
+                info = listKammern[kammerInt].goalTemp.toString(),
                 openDialog = openDialog
             )
             InfoClickable(
@@ -54,7 +54,7 @@ fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxView
             InfoClickable(label = "Lichstrahlung", info = "1", openDialog = openDialog)
             InfoClickable(
                 label = "Beste Temperatur",
-                info = listKammern[kammerInt].currentTemp.toString(),
+                info = listKammern[kammerInt].goalTemp.toString(),
                 openDialog = openDialog
             )
         }

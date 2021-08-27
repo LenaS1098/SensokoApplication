@@ -1,6 +1,5 @@
 package com.sensokoapplication.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -12,6 +11,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -20,15 +20,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.sensokoapplication.Transportbox
-import com.sensokoapplication.mvvm.BoxViewModel
+import com.sensokoapplication.db.Transportbox
+import com.sensokoapplication.db.BoxViewModel
 
 
 @ExperimentalFoundationApi
 @Composable
 fun FavoritesScreen( navController: NavController, boxViewModel: BoxViewModel){
 
-    val allBoxesList = boxViewModel.getAllBoxes()
+    val allBoxesList :MutableState<List<Transportbox>> = remember { mutableStateOf(boxViewModel.getAllBoxes()) }
     val listArrivedBoxes = allBoxesList.value.filter { it.hasArrived }
     val listBoxes = allBoxesList.value.filter { !it.hasArrived }
 
@@ -38,7 +38,6 @@ fun FavoritesScreen( navController: NavController, boxViewModel: BoxViewModel){
                 .padding(top = 25.dp, bottom = 15.dp)
                 .fillMaxWidth(), textAlign = TextAlign.Center, style = MaterialTheme.typography.h5, color = MaterialTheme.colors.onPrimary)
         }
-
 
         Text(text = "Aktuelle Lieferungen", modifier = Modifier.padding(top = 10.dp, bottom = 10.dp), style = MaterialTheme.typography.h6)
         LazyColumn {
@@ -66,9 +65,9 @@ fun FancyItem(item: Transportbox, navController: NavController, boxViewModel: Bo
     Card(modifier = Modifier
         .padding(top = 10.dp, start = 20.dp, end = 20.dp)
         .combinedClickable(onLongClick = {
-                                         boxViewModel.changeCurBox(item)
-                                         navController.navigate("overview")
-                                         }, onClick = {})
+            boxViewModel.changeCurBox(item)
+            navController.navigate("overview")
+        }, onClick = {})
         ,
         shape = RoundedCornerShape(8.dp), backgroundColor = Color.LightGray
     ) {
@@ -78,7 +77,7 @@ fun FancyItem(item: Transportbox, navController: NavController, boxViewModel: Bo
                 .weight(1f)
                 .wrapContentWidth(Alignment.Start)) {
                 Text(text = item.label, style = MaterialTheme.typography.h6, modifier = Modifier.padding(top = 3.dp))
-                Text(text = if(item.hasArrived){item.arrival}else{item.origin},modifier = Modifier.padding(bottom = 3.dp))
+                Text(text = if(item.hasArrived){item.arrival}else{"-1"},modifier = Modifier.padding(bottom = 3.dp))
                 Divider()
             }
           /*  Image(painter = painterResource(id = R.drawable.ic_star), contentDescription = "FavoriteIcon", modifier = Modifier

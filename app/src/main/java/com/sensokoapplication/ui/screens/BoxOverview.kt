@@ -1,6 +1,5 @@
 package com.sensokoapplication.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,15 +12,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sensokoapplication.Transportbox
 import com.sensokoapplication.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import com.sensokoapplication.Kammer
-import com.sensokoapplication.mvvm.BoxViewModel
-import kotlinx.coroutines.launch
+import com.sensokoapplication.db.*
 
 
 @Composable
@@ -132,7 +128,7 @@ fun OverviewTab(transportbox: Transportbox, kammer: MutableState<String>, boxVie
         Row(horizontalArrangement = Arrangement.SpaceEvenly) {
             DetailInfoBox(
                 label = "Temperatur",
-                info = listKammern[kammerInt].currentTemp.toString(),
+                info = listKammern[kammerInt].goalTemp.toString(),
                 openDialog = openDialog
             )
             DetailInfoBox(
@@ -145,7 +141,7 @@ fun OverviewTab(transportbox: Transportbox, kammer: MutableState<String>, boxVie
             DetailInfoBox(label = "Aktuelle Kammer", info = kammer.value, openDialog = openDialog)
             DetailInfoBox(
                 label = "Beste Temperatur",
-                info = listKammern[kammerInt].currentTemp.toString(),
+                info = listKammern[kammerInt].goalTemp.toString(),
                 openDialog = openDialog
             )
         }
@@ -230,6 +226,7 @@ fun DummyKammern(): List<Kammer> {
     val ausgangsliste = listOf(kammerA, kammerAB, kammerAC, kammerB, kammerC, kammerD)
     return listOf(ausgangsliste.random(), ausgangsliste.random(), ausgangsliste.random())
 }
+
 @Composable
 fun FancyTab(title: String, selected: Boolean, onClick: () -> Unit) {
     Tab(selected, onClick) {
