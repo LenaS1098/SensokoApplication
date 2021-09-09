@@ -24,29 +24,33 @@ import com.sensokoapplication.db.Transport
 import com.sensokoapplication.db.Transportbox
 
 @Composable
-fun TrackingTab(transport : Transport){
+fun TrackingTab(transport : Transport, transportbox: Transportbox){
+
     Column(horizontalAlignment = Alignment.Start) {
         TrackingStats(transport)
         Spacer(modifier = Modifier.padding(top = 15.dp))
-        TrackStepCard(painterResource(id = R.drawable.ic_star), label = "Fertig für Transport", data = "22.06.21 - 20:00 Uhr")
-        TrackStepCard(painterResource(id = R.drawable.ic_star), label = "Ins Transportfahrzeug eingeladen", data = "23.06.21 - 04:30 Uhr")
-        TrackStepCard(painterResource(id = R.drawable.ic_star), label = "Noch 5 Stopps entfernt", data = "23.06.21 - 12:15 Uhr")
-        TrackStepCardNoDivider(painterResource(id = R.drawable.ic_star), label = "Ankunft am Zielort", data = "23.06.21 - 13:45 Uhr")
+        TrackStepCard(painterResource(id = R.drawable.ic_ready), label = "Transportbereit", data = transport.carrier,transport.ready)
+        TrackStepCard(painterResource(id = R.drawable.ic_transport), label = "Ins Transportfahrzeug eingeladen", data = transport.transporter,transport.shipped)
+        TrackStepCardNoDivider(painterResource(id = R.drawable.ic_finish), label = "Ankunft am Zielort", data = transportbox.arrival, transport.arrival)
+        Spacer(modifier = Modifier.padding(top = 15.dp))
     }
     
 }
 
 @Composable
-fun TrackStepCard(icon: Painter, label : String, data : String){
+fun TrackStepCard(icon: Painter, label : String, data : String, isActive : Boolean){
     Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(start=25.dp)) {
         Row (modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
             ){
-            CircleIcon(icon = icon)
+            CircleIcon(icon = icon, isActive)
             Column {
                 Text(text = label, Modifier.paddingFromBaseline(top = 20.dp),fontSize = 15.sp)
-                Text(data, fontSize = 13.sp, color = Color.Gray, fontStyle = FontStyle.Italic)
+                if(isActive){
+                    Text(data, fontSize = 13.sp, color = Color.Gray, fontStyle = FontStyle.Italic)
+                }
+
             }
         }
         Divider(color = Color.Gray, modifier = Modifier
@@ -56,27 +60,35 @@ fun TrackStepCard(icon: Painter, label : String, data : String){
     }
 }
 @Composable
-fun TrackStepCardNoDivider(icon: Painter, label : String, data : String){
+fun TrackStepCardNoDivider(icon: Painter, label : String, data : String, isActive: Boolean){
     Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(start=25.dp)) {
         Row (modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
         ){
-            CircleIcon(icon = icon)
+            CircleIcon(icon = icon, isActive)
             Column {
                 Text(text = label, Modifier.paddingFromBaseline(top = 20.dp),fontSize = 15.sp)
-                Text(data, fontSize = 13.sp, color = Color.Gray, fontStyle = FontStyle.Italic)
+                if(isActive){
+                    Text(data, fontSize = 13.sp, color = Color.Gray, fontStyle = FontStyle.Italic)
+                }
+
             }
         }
     }
 }
 
 @Composable
-fun CircleIcon(icon : Painter){
+fun CircleIcon(icon : Painter, isActive: Boolean){
+    val backgroundColor = if(isActive){
+        MaterialTheme.colors.primary
+    }else{
+        Color.LightGray
+    }
     val openDialog: MutableState<Boolean> = remember{mutableStateOf(false)}
     Column(modifier = Modifier
         .fillMaxHeight(),horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        Card(shape = CircleShape, elevation = 12.dp, backgroundColor = MaterialTheme.colors.primary, modifier = Modifier
+        Card(shape = CircleShape, elevation = 12.dp, backgroundColor = backgroundColor, modifier = Modifier
             .fillMaxHeight()
             .padding(top = 8.dp, bottom = 8.dp, end = 8.dp)
             .clickable {
@@ -85,7 +97,7 @@ fun CircleIcon(icon : Painter){
         ) {
             Image(painter = icon, contentDescription = "Circle Icon", contentScale = ContentScale.Crop)
         }
-        if(openDialog.value){
+        /*if(openDialog.value){
             AlertDialog(onDismissRequest = { openDialog.value = false}
                 , title = {Text("Zuständige Person")}
                 , text = { Text("Logistiker XYZ")}
@@ -93,7 +105,7 @@ fun CircleIcon(icon : Painter){
                     Text("X", color = Color.Black, modifier = Modifier.clickable { openDialog.value = false })
 
                 })
-        }
+        }*/
     }
 }
 

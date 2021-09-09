@@ -40,7 +40,7 @@ fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxView
         Text("Kammer ${kammer.value}", modifier = Modifier.padding(bottom=10.dp),style = MaterialTheme.typography.h5)
         Row(horizontalArrangement = Arrangement.SpaceEvenly) {
             InfoClickable(
-                label = "Temperatur",
+                label = "Live Temperatur",
                 info = listKammern[kammerInt].goalTemp.toString(),
                 openDialog = openDialog
             )
@@ -53,7 +53,7 @@ fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxView
         Row(horizontalArrangement = Arrangement.SpaceEvenly) {
             InfoClickable(label = "Lichstrahlung", info = "1", openDialog = openDialog)
             InfoClickable(
-                label = "Beste Temperatur",
+                label = "Ziel Temperatur",
                 info = listKammern[kammerInt].goalTemp.toString(),
                 openDialog = openDialog
             )

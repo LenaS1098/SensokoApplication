@@ -39,10 +39,9 @@ data class Transport(
     val transporter : String,
     val origin:String,
     val destination: String,
-    var ready : String= "",
-    var shipped: String = "",
-    var arrival: String = "",
-    var stops: Int = 100000
+    var ready : Boolean = false,
+    var shipped: Boolean = false,
+    var arrival: Boolean = false,
 ) {
     constructor(
         carrier: String,
@@ -50,6 +49,15 @@ data class Transport(
         origin: String,
         destination: String
     ) : this(0,carrier, transporter, origin, destination)
+    constructor(
+        carrier: String,
+        transporter: String,
+        origin: String,
+        destination: String,
+        ready: Boolean,
+        shipped: Boolean,
+        arrival: Boolean
+    ) : this(0,carrier, transporter, origin, destination, ready, shipped,arrival)
 }
 
 @Entity

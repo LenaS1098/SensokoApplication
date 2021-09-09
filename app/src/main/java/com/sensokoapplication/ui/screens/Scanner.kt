@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sensokoapplication.db.BoxViewModel
@@ -62,9 +63,10 @@ fun ScannerScreen(boxViewModel: BoxViewModel){
 
         Text("Box Infos", modifier = Modifier
             .padding(bottom = 10.dp)
-            .fillMaxWidth().clickable {
-                     showBoxInfos = !showBoxInfos
-            }, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6)
+            .fillMaxWidth()
+            .clickable {
+                showBoxInfos = !showBoxInfos
+            }, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary, fontStyle = FontStyle.Italic)
         if(showBoxInfos){
             OutlinedTextField(value = label, onValueChange = {label = it}, label = { Text(text = "Label*")})
             Row(modifier = Modifier.padding(top = 5.dp)) {
@@ -80,52 +82,57 @@ fun ScannerScreen(boxViewModel: BoxViewModel){
         }
         Text("Transport Infos", modifier = Modifier
             .padding(bottom = 10.dp)
-            .fillMaxWidth().clickable {
+            .fillMaxWidth()
+            .clickable {
                 showTransportInfos = !showTransportInfos
-            }, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6)
+            }, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary, fontStyle = FontStyle.Italic)
         if(showTransportInfos){
             OutlinedTextField(value = carrier, onValueChange = {carrier = it}, label = { Text(text = "Unternehmen*")})
             OutlinedTextField(value = transporter, onValueChange = {transporter = it}, label = { Text(text = "Transporter*")})
             OutlinedTextField(value = origin, onValueChange = {origin = it}, label = { Text(text = "Startort*")})
             OutlinedTextField(value = destination, onValueChange = {destination = it}, label = { Text(text = "Ziel*")})
-            Row(modifier = Modifier.padding(top = 5.dp)) {
-                Text("Ready:")
-                Checkbox(checked = ready, onCheckedChange = {
-                    ready = it
-                    if(!ready){
-                        shipped = false
-                        arrivalTransport = false
-                    }
-                })
+            Column(verticalArrangement = Arrangement.SpaceEvenly) {
+                Row(modifier = Modifier.padding(top = 5.dp)) {
+                    Text("Transportfertig:")
+                    Checkbox(checked = ready, onCheckedChange = {
+                        ready = it
+                        if(!ready){
+                            shipped = false
+                            arrivalTransport = false
+                        }
+                    })
+                }
+                Row(modifier = Modifier.padding(top = 5.dp)) {
+                    Text("Versand:")
+                    Checkbox(checked = shipped, onCheckedChange = {
+                        shipped = it
+                        if(!shipped){
+                            arrivalTransport = false
+                        }else{
+                            ready = true
+                        }
+                    })
+                }
+                Row(modifier = Modifier.padding(top = 5.dp)) {
+                    Text("Angekommen:")
+                    Checkbox(checked = arrivalTransport, onCheckedChange = {
+                        arrivalTransport = it
+                        if(arrivalTransport){
+                            ready = true
+                            shipped = true
+                        }
+                    })
+                }
             }
-            Row(modifier = Modifier.padding(top = 5.dp)) {
-                Text("Shipped:")
-                Checkbox(checked = shipped, onCheckedChange = {
-                    shipped = it
-                    if(!shipped){
-                        arrivalTransport = false
-                    }else{
-                        ready = true
-                    }
-                })
-            }
-            Row(modifier = Modifier.padding(top = 5.dp)) {
-                Text("Angekommen:")
-                Checkbox(checked = arrivalTransport, onCheckedChange = {
-                    arrivalTransport = it
-                    if(arrivalTransport){
-                        ready = true
-                        shipped = true
-                    }
-                })
-            }
+
         }
 
         Text("Kammer Infos", modifier = Modifier
             .padding(bottom = 10.dp)
-            .fillMaxWidth().clickable {
+            .fillMaxWidth()
+            .clickable {
                 showKammerInfos = !showKammerInfos
-            }, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6)
+            }, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6, color = MaterialTheme.colors.primary, fontStyle = FontStyle.Italic)
         if(showKammerInfos){
             OutlinedTextField(value = goalTempA, onValueChange = {goalTempA = it}, label = { Text(text = "Ziel Temeperatur*")})
             OutlinedTextField(value = medizinA, onValueChange = {medizinA = it}, label = { Text(text = "Medizin*")})
@@ -137,7 +144,7 @@ fun ScannerScreen(boxViewModel: BoxViewModel){
 
         Button(modifier = Modifier.padding(top = 10.dp),
             onClick = {
-                val transport = Transport(carrier, transporter, origin, destination)
+                val transport = Transport(carrier, transporter, origin, destination,ready,shipped,arrivalTransport)
                 boxViewModel.insertTransport(transport)
                 val transportbox = Transportbox(label,transportId,hasArrived, arrival)
                 boxViewModel.insertBox(transportbox)

@@ -99,11 +99,11 @@ fun LoginScreen(navController: NavController = rememberNavController(), boxViewM
     Scaffold() {
         
         BoxOverviewScaffoldNav(boxViewModel = boxViewModel)
-        if(state.value){
+       /* if(state.value){
             LoginContent(state = state)
         }else{
             BoxOverviewScaffoldNav(boxViewModel = boxViewModel)
-        }
+        }*/
     }
 
 }

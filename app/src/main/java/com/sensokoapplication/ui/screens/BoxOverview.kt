@@ -148,7 +148,7 @@ fun OverviewTab(transportbox: Transportbox, kammer: MutableState<String>, boxVie
         Row(horizontalArrangement = Arrangement.SpaceEvenly) {
             DetailInfoBox(label = "Aktuelle Kammer", info = kammer.value, openDialog = openDialog)
             DetailInfoBox(
-                label = "Beste Temperatur",
+                label = "Ziel Temperatur",
                 info = listKammern[kammerInt].goalTemp.toString(),
                 openDialog = openDialog
             )
@@ -188,7 +188,7 @@ fun DetailInfoBox(
 @Composable
 fun TabHeader(transportbox: Transportbox, currentKammer: MutableState<String>, boxViewModel: BoxViewModel) {
     val state = remember { mutableStateOf(0) }
-    val titles = listOf("ATM", "Tracking", "History")
+    val titles = listOf("Aktuell", "Sendeverlauf", "Historie")
     val currentTransport = boxViewModel.currentTransport.value
     Column {
         TabRow(
@@ -209,7 +209,7 @@ fun TabHeader(transportbox: Transportbox, currentKammer: MutableState<String>, b
                 OverviewTab(transportbox, currentKammer, boxViewModel)
             }
             1-> {
-                TrackingTab(currentTransport)}
+                TrackingTab(currentTransport, transportbox)}
             2-> {
                 HistoryTab(transportbox = transportbox,boxViewModel= boxViewModel, kammer = currentKammer)}
             else -> {
