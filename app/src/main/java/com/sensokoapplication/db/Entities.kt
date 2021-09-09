@@ -5,22 +5,19 @@ import androidx.room.*
 @Entity(tableName = "all_boxes")
 data class Transportbox(
     @PrimaryKey(autoGenerate = true)
-    var boxId: Long = 0L,
-    @ColumnInfo(name = "Boxkennung")
+    val boxId: Long,
     val label : String,
-    @ColumnInfo(name = "Transportinfos")
     val transportId: Long,
-    @ColumnInfo(name = "Ist Angekommen")
     var hasArrived : Boolean = false,
-    @ColumnInfo(name = "Ankunftszeit")
     var arrival : String ="",
-    @ColumnInfo(name= "IsCurrentBox")
     var isCurrent : Boolean = false
 ){
     constructor(label: String,transportId: Long,hasArrived: Boolean,arrival: String = ""):
-            this(-1,label, transportId, hasArrived, arrival)
+            this(0,label, transportId, hasArrived, arrival)
     constructor(label: String,transportId: Long):
-            this(-1,label, transportId)
+            this(0,label, transportId)
+    constructor(label: String,transportId: Long, hasArrived: Boolean,arrival: String,isCurrent: Boolean):
+            this(0,label, transportId,hasArrived,arrival,isCurrent)
 }
 
 
@@ -37,22 +34,14 @@ data class Kammer(
 //Bezeichnungen richtig?
 @Entity
 data class Transport(
-    @PrimaryKey(autoGenerate = true) val transportId: Long = 0L,
-    @ColumnInfo(name="Transporteur")
+    @PrimaryKey(autoGenerate = true) val transportId: Long,
     val carrier : String,
-    @ColumnInfo(name="Transporter")
     val transporter : String,
-    @ColumnInfo(name = "Start")
     val origin:String,
-    @ColumnInfo(name = "Ziel")
     val destination: String,
-    @ColumnInfo(name = "Ready For Use")
     var ready : String= "",
-    @ColumnInfo(name = "Shipping Time")
     var shipped: String = "",
-    @ColumnInfo(name = "Arrival Time")
     var arrival: String = "",
-    @ColumnInfo(name = "Stops")
     var stops: Int = 100000
 ) {
     constructor(
@@ -60,21 +49,19 @@ data class Transport(
         transporter: String,
         origin: String,
         destination: String
-    ) : this(-1,carrier, transporter, origin, destination)
+    ) : this(0,carrier, transporter, origin, destination)
 }
 
 @Entity
 data class Parameter(
-    @PrimaryKey(autoGenerate = true) val parameterId: Long = 0L,
+    @PrimaryKey(autoGenerate = true) val parameterId: Long,
     val parentKammerId: Long,
-    @ColumnInfo(name="TimeStamp")
     val timestamp: String,
-    @ColumnInfo(name="Temperatur")
     val temperatur: Float
 ){
     constructor(
         parentKammerId: Long,timestamp: String,temperatur: Float
-    ):this(-1,parentKammerId,timestamp, temperatur)
+    ):this(0,parentKammerId,timestamp, temperatur)
 }
 
 //Relationships Entities

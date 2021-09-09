@@ -1,5 +1,6 @@
 package com.sensokoapplication.ui.screens
 
+import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,12 +18,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Observer
 import com.sensokoapplication.db.*
+import java.util.*
 
 
 @Composable
 fun BoxOverviewScreen(boxViewModel: BoxViewModel) {
-    val transportbox: Transportbox = boxViewModel.getCurBox()
+ //   val listBoxes = boxViewModel.getAllBoxes().filter { !it.hasArrived }
+    val transportbox = boxViewModel.currentBox.value
+
     Surface(color = MaterialTheme.colors.background) {
         Column(modifier = Modifier.fillMaxWidth()) {
             val currentKammer = remember { mutableStateOf("A") }
@@ -30,8 +36,6 @@ fun BoxOverviewScreen(boxViewModel: BoxViewModel) {
             TabHeader(transportbox, currentKammer, boxViewModel)
         }
     }
-
-
 }
 
 @Composable
@@ -104,27 +108,31 @@ fun BasicInfoBox(label: String, info: String) {
     }
 }
 
-suspend fun getDisplayedBox(boxViewModel: BoxViewModel):Transportbox{
-    return boxViewModel.getCurBox()
-}
 
 @Composable
-fun OverviewTab(transportbox: Transportbox, kammer: MutableState<String>, boxViewModel: BoxViewModel) {
+fun OverviewTab(transportbox: Transportbox, kammer: MutableState<String>, boxViewModel: BoxViewModel){
     val openDialog = remember { mutableStateOf(false) }
+    val currentTransport = boxViewModel.currentTransport.value
     val kammerInt = when (kammer.value) {
         "A" -> 0
         "B" -> 1
         "C" -> 2
         else -> 1
     }
-    val listKammern = if(boxViewModel.getKammernFromBox(transportbox).isEmpty()){DummyKammern()} else {boxViewModel.getKammernFromBox(transportbox)}
+    boxViewModel.getKammernFromBox(transportbox)
+    val listKammern = if(boxViewModel.listeKammern.value.isEmpty()){
+        DummyKammern()
+    }else{
+        boxViewModel.listeKammern.value
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
             .fillMaxWidth(),
         verticalArrangement = Arrangement.SpaceEvenly
 
     ) {
-        TrackingStats(transportbox = transportbox)
+        TrackingStats(currentTransport)
         Row(horizontalArrangement = Arrangement.SpaceEvenly) {
             DetailInfoBox(
                 label = "Temperatur",
@@ -181,6 +189,7 @@ fun DetailInfoBox(
 fun TabHeader(transportbox: Transportbox, currentKammer: MutableState<String>, boxViewModel: BoxViewModel) {
     val state = remember { mutableStateOf(0) }
     val titles = listOf("ATM", "Tracking", "History")
+    val currentTransport = boxViewModel.currentTransport.value
     Column {
         TabRow(
             selectedTabIndex = state.value,
@@ -200,7 +209,7 @@ fun TabHeader(transportbox: Transportbox, currentKammer: MutableState<String>, b
                 OverviewTab(transportbox, currentKammer, boxViewModel)
             }
             1-> {
-                TrackingTab(transportbox = transportbox)}
+                TrackingTab(currentTransport)}
             2-> {
                 HistoryTab(transportbox = transportbox,boxViewModel= boxViewModel, kammer = currentKammer)}
             else -> {

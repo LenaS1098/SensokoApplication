@@ -6,9 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.sensokoapplication.*
 
-@Database(entities = [Transportbox::class, Kammer::class,Transport::class,Parameter::class], version = 1)
+@Database(entities = [Transportbox::class, Kammer::class,Transport::class,Parameter::class], version = 1, exportSchema = true)
 abstract class BoxDatabase :RoomDatabase() {
     abstract val boxDao :BoxDao
+    abstract val transportDao :TransportDao
+    abstract val kammerDao:KammerDao
+    abstract val parameterDao : ParameterDao
 
     companion object{
         @Volatile
@@ -20,13 +23,12 @@ abstract class BoxDatabase :RoomDatabase() {
                     context.applicationContext.applicationContext,
                     BoxDatabase::class.java,
                     "box_db"
-                ).allowMainThreadQueries().build().also {
+                ).allowMainThreadQueries()
+                    .createFromAsset("database/box.db")
+                    .build().also {
                     INSTANCE = it
                 }
             }
         }
     }
-
-
-
 }

@@ -1,22 +1,16 @@
 package com.sensokoapplication.db
 
-import kotlinx.coroutines.flow.MutableStateFlow
 
-
-class RoomBoxRepository(private val boxDao: BoxDao) : BoxRepository {
-
-    private val readAllData : MutableStateFlow<List<Transportbox>> = MutableStateFlow(boxDao.getAll())
-
+class RoomBoxRepository(private val boxDao: BoxDao, private val transportDao: TransportDao, private val kammerDao: KammerDao, private val parameterDao: ParameterDao) : BoxRepository {
 
     private val listDummyKammer = listOf(Kammer(1,2f,"fhg"))
 
-
     override suspend fun getAllBoxes(): List<Transportbox> {
-        return readAllData.value
+        return boxDao.getAll()
     }
 
     override suspend fun getCurBox(): Transportbox {
-        return boxDao.getCurrentBox()
+        return boxDao.getCurrentBox(true)
     }
 
     override suspend fun changeCurrentBox(newTransportbox: Transportbox) {
@@ -33,22 +27,59 @@ class RoomBoxRepository(private val boxDao: BoxDao) : BoxRepository {
 
     override suspend fun getKammernFromBox(transportbox: Transportbox): List<Kammer> {
        val list=  boxDao.getKammernFromBox(transportbox.boxId)
-        return if(list.first().kammern.isNotEmpty()){
+        if(list.isEmpty()){
+            return listDummyKammer
+        }
+        return if(list.first().kammern.isNotEmpty() && list.isNotEmpty()){
            list.first().kammern
         }else{
             listDummyKammer
         }
-
     }
 
-   /* private fun randomKammerList():List<Kammer>{
-        val ausgangsliste = listOf(kammerA,kammerAB,kammerAC,kammerB,kammerC,kammerD)
-        val ergebnisliste = listOf(ausgangsliste.random(),ausgangsliste.random(),ausgangsliste.random())
-        return ergebnisliste
-    }
-*/
     override suspend fun getKammern(): List<BoxWithKammern> {
         return boxDao.getKammern()
+    }
+
+    override suspend fun getTransport(transportbox: Transportbox): Transport {
+        return transportDao.getTransportById(transportbox.transportId)
+    }
+
+    override suspend fun getParameterFromKammer(kammerId: Long): List<Parameter> {
+        return boxDao.getParameterFomKammer(kammerId)
+    }
+
+    override suspend fun insertTransport(transport: Transport) {
+        transportDao.insertTransport(transport)
+    }
+
+    override suspend fun insertKammer(kammer: Kammer) {
+        kammerDao.insertKammer(kammer)
+    }
+
+    override suspend fun insertParameter(parameter: Parameter) {
+        boxDao.insertParameter(parameter)
+    }
+
+    override suspend fun getTransportId(
+        carrier: String,
+        transporter: String,
+        origin: String,
+        destination: String
+    ): Long {
+       return transportDao.getTransportId(carrier, transporter, origin, destination)
+    }
+
+    override suspend fun getBoxId(label: String): Long {
+       return boxDao.getBoxId(label)
+    }
+
+    override suspend fun getBoxCount(): Long {
+        return boxDao.getBoxCount()
+    }
+
+    override suspend fun getTransportCount(): Long {
+        return transportDao.getTransportCount()
     }
 
 

@@ -30,7 +30,7 @@ fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxView
         "C" -> 2
         else -> 1
     }
-    val listKammern = if(boxViewModel.getKammernFromBox(transportbox).isEmpty()){DummyKammern()} else {boxViewModel.getKammernFromBox(transportbox)}
+    val listKammern = boxViewModel.listeKammern.value
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
             .fillMaxWidth().padding(top = 30.dp),

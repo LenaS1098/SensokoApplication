@@ -20,12 +20,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sensokoapplication.R
+import com.sensokoapplication.db.Transport
 import com.sensokoapplication.db.Transportbox
 
 @Composable
-fun TrackingTab(transportbox: Transportbox){
+fun TrackingTab(transport : Transport){
     Column(horizontalAlignment = Alignment.Start) {
-        TrackingStats(transportbox = transportbox)
+        TrackingStats(transport)
         Spacer(modifier = Modifier.padding(top = 15.dp))
         TrackStepCard(painterResource(id = R.drawable.ic_star), label = "Fertig für Transport", data = "22.06.21 - 20:00 Uhr")
         TrackStepCard(painterResource(id = R.drawable.ic_star), label = "Ins Transportfahrzeug eingeladen", data = "23.06.21 - 04:30 Uhr")
@@ -97,7 +98,7 @@ fun CircleIcon(icon : Painter){
 }
 
 @Composable
-fun TrackingStats(transportbox: Transportbox){
+fun TrackingStats(transportInfo: Transport){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
             .fillMaxWidth()
@@ -117,9 +118,9 @@ fun TrackingStats(transportbox: Transportbox){
                     .fillMaxWidth()
                     .padding(top = 10.dp)
             ) {
-                BasicInfoBox(label = "Startpunkt", info = "")
-                BasicInfoBox(label = "Ankunftsziel", info = "")
-                BasicInfoBox(label = "Ankuftszeit", info = "15:12 Uhr")
+                BasicInfoBox(label = "Startpunkt", info = transportInfo.origin)
+                BasicInfoBox(label = "Ankunftsziel", info = transportInfo.destination)
+                BasicInfoBox(label = "Transport", info = transportInfo.carrier)
             }
         }
     }

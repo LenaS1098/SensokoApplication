@@ -28,9 +28,8 @@ import com.sensokoapplication.db.BoxViewModel
 @Composable
 fun FavoritesScreen( navController: NavController, boxViewModel: BoxViewModel){
 
-    val allBoxesList :MutableState<List<Transportbox>> = remember { mutableStateOf(boxViewModel.getAllBoxes()) }
-    val listArrivedBoxes = allBoxesList.value.filter { it.hasArrived }
-    val listBoxes = allBoxesList.value.filter { !it.hasArrived }
+    val listArrivedBoxes = boxViewModel.transportboxen.value.filter { it.hasArrived }
+    val listBoxes = boxViewModel.transportboxen.value.filter { !it.hasArrived }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Card(backgroundColor = MaterialTheme.colors.primary, modifier = Modifier.height(80.dp)) {
@@ -61,7 +60,6 @@ fun FavoritesScreen( navController: NavController, boxViewModel: BoxViewModel){
 @ExperimentalFoundationApi
 @Composable
 fun FancyItem(item: Transportbox, navController: NavController, boxViewModel: BoxViewModel){
-    val changeCurrentBox = remember{ mutableStateOf(false)}
     Card(modifier = Modifier
         .padding(top = 10.dp, start = 20.dp, end = 20.dp)
         .combinedClickable(onLongClick = {
@@ -77,7 +75,7 @@ fun FancyItem(item: Transportbox, navController: NavController, boxViewModel: Bo
                 .weight(1f)
                 .wrapContentWidth(Alignment.Start)) {
                 Text(text = item.label, style = MaterialTheme.typography.h6, modifier = Modifier.padding(top = 3.dp))
-                Text(text = if(item.hasArrived){item.arrival}else{"-1"},modifier = Modifier.padding(bottom = 3.dp))
+                Text(text = if(item.hasArrived){item.arrival}else{""},modifier = Modifier.padding(bottom = 3.dp))
                 Divider()
             }
           /*  Image(painter = painterResource(id = R.drawable.ic_star), contentDescription = "FavoriteIcon", modifier = Modifier

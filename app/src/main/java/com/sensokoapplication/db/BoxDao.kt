@@ -7,6 +7,9 @@ interface BoxDao {
     @Query("SELECT * from all_boxes")
     fun getAll(): List<Transportbox>
 
+    @Query("SELECT  COUNT(boxId) FROM all_boxes")
+    fun getBoxCount():Long
+
     @Query("SELECT * from all_boxes where boxId = :id")
     fun getById(id: Int) : Transportbox?
 
@@ -14,13 +17,7 @@ interface BoxDao {
     suspend fun insertBox(transportbox: Transportbox)
 
     @Insert(onConflict =OnConflictStrategy.REPLACE)
-    suspend fun insertTransport(transport: Transport)
-
-    @Insert(onConflict =OnConflictStrategy.REPLACE)
     suspend fun insertParameter(parameter: Parameter)
-
-    @Insert(onConflict =OnConflictStrategy.REPLACE)
-    suspend fun insertKammer(kammer: Kammer)
 
     @Update
     suspend fun update(transportbox: Transportbox)
@@ -31,17 +28,21 @@ interface BoxDao {
     @Query("DELETE FROM all_boxes")
     suspend fun deleteAllBoxes()
 
-    @Query("SELECT * FROM all_boxes where IsCurrentBox = :wahr")
+    @Query("SELECT * FROM all_boxes where isCurrent = :wahr")
     suspend fun getCurrentBox(wahr: Boolean = true):Transportbox
 
     @Transaction
     @Query("SELECT * FROM all_boxes where boxId = :boxId")
-    fun getKammernFromBox(boxId : Long):List<BoxWithKammern>
+    suspend fun getKammernFromBox(boxId : Long):List<BoxWithKammern>
 
     @Transaction
     @Query("SELECT * FROM all_boxes")
-    fun getKammern():List<BoxWithKammern>
+    suspend fun getKammern():List<BoxWithKammern>
 
+    @Query("SELECT * FROM Parameter where parentKammerId = :kammerId")
+    suspend fun getParameterFomKammer(kammerId:Long):List<Parameter>
 
+    @Query("SELECT boxId FROM all_boxes where label=:label")
+    suspend fun getBoxId(label:String):Long
 
 }
