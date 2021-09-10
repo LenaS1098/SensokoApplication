@@ -76,9 +76,8 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.4.0-alpha03'
     kapt 'androidx.room:room-compiler:2.4.0-alpha03'
     implementation 'androidx.room:room-ktx:2.4.0-alpha03'
-    //Hilt
-  //  implementation("com.google.dagger:hilt-android:2.35")
-   //kapt("com.google.dagger:hilt-android-compiler:2.35")
+    //Charts java
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 
 

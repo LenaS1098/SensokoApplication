@@ -10,10 +10,12 @@ class BoxViewModel(private val boxRepository: BoxRepository) : ViewModel() {
 
     private val emptyBox = Transportbox("Empty",-1)
     private val emptyTransport = Transport("","db","falscher","aufruf")
+    private val emptyKammer = Kammer(-1,-1.0F,"")
 
     val transportboxen : MutableState<List<Transportbox>> = mutableStateOf(listOf())
     val currentBox: MutableState<Transportbox> = mutableStateOf(emptyBox)
     val currentTransport : MutableState<Transport> = mutableStateOf(emptyTransport)
+    val currentKammer: MutableState<Kammer> = mutableStateOf(emptyKammer)
     val listeKammern: MutableState<List<Kammer>> = mutableStateOf(listOf())
 
 
@@ -28,10 +30,11 @@ class BoxViewModel(private val boxRepository: BoxRepository) : ViewModel() {
         viewModelScope.launch {
             transportboxen.value = boxRepository.getAllBoxes()
             currentBox.value = boxRepository.getCurBox()
-            listeKammern.value = boxRepository.getKammernFromBox(box)
+            listeKammern.value = boxRepository.getKammernFromBox(currentBox.value)
             currentTransport.value = boxRepository.getTransport(currentBox.value)
             transportCount.value = boxRepository.getTransportCount()
             boxCount.value = boxRepository.getBoxCount()
+            currentKammer.value = listeKammern.value[0]
         }
     }
 
@@ -53,8 +56,17 @@ class BoxViewModel(private val boxRepository: BoxRepository) : ViewModel() {
              currentBox.value = newTransportbox
              boxRepository.changeCurrentBox(newTransportbox)
              currentTransport.value = boxRepository.getTransport(newTransportbox)
+             listeKammern.value = boxRepository.getKammernFromBox(newTransportbox)
+             listeParameter.value = boxRepository.getParameterFromKammer(listeKammern.value[0].kammerId)
          }
 
+    }
+
+    fun changeCurKammer(newKammer: Kammer){
+        viewModelScope.launch {
+            currentKammer.value = newKammer
+            listeParameter.value = boxRepository.getParameterFromKammer(newKammer.kammerId)
+        }
     }
 
     fun insertBox(transportbox: Transportbox){
@@ -80,13 +92,6 @@ class BoxViewModel(private val boxRepository: BoxRepository) : ViewModel() {
         }
     }
 
-    fun getTransportFromBox(transportbox: Transportbox) : Transport{
-        var erg = emptyTransport
-        viewModelScope.launch {
-            erg = boxRepository.getTransport(transportbox)
-        }
-        return erg
-    }
 
      fun getKammernFromBox(transportbox: Transportbox){
          viewModelScope.launch {

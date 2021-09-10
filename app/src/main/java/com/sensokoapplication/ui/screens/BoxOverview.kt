@@ -32,14 +32,14 @@ fun BoxOverviewScreen(boxViewModel: BoxViewModel) {
     Surface(color = MaterialTheme.colors.background) {
         Column(modifier = Modifier.fillMaxWidth()) {
             val currentKammer = remember { mutableStateOf("A") }
-            BoxHeader(transportbox, currentKammer)
+            BoxHeader(transportbox, currentKammer,boxViewModel)
             TabHeader(transportbox, currentKammer, boxViewModel)
         }
     }
 }
 
 @Composable
-fun BoxHeader(transportbox: Transportbox, currentKammer : MutableState<String>) {
+fun BoxHeader(transportbox: Transportbox, currentKammer : MutableState<String>,boxViewModel: BoxViewModel) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Card(
@@ -71,12 +71,19 @@ fun BoxHeader(transportbox: Transportbox, currentKammer : MutableState<String>) 
                 ) {
                     Text("A", modifier = Modifier.clickable {
                         currentKammer.value = "A"
+                        boxViewModel.currentKammer.value = boxViewModel.listeKammern.value[0]
+                        boxViewModel.changeCurKammer(boxViewModel.listeKammern.value[0])
                     })
                     Text("B", modifier = Modifier.clickable {
                         currentKammer.value = "B"
+                        boxViewModel.currentKammer.value = boxViewModel.listeKammern.value[1]
+                        boxViewModel.changeCurKammer(boxViewModel.listeKammern.value[1])
                     })
                     Text("C", modifier = Modifier.clickable {
                         currentKammer.value = "C"
+                        boxViewModel.currentKammer.value = boxViewModel.listeKammern.value[2]
+                        boxViewModel.changeCurKammer(boxViewModel.listeKammern.value[2])
+
                     })
 
                 }

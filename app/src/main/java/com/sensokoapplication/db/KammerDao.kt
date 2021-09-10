@@ -14,5 +14,7 @@ interface KammerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertKammer(kammer: Kammer)
 
+    @Query("SELECT kammerId FROM Kammer WHERE parentBoxId=:parentBoxId AND goalTemp=:goalTemp")
+    suspend fun getKammerId(parentBoxId: Long, goalTemp: Float):Long
 
 }

@@ -31,4 +31,6 @@ interface BoxRepository {
     suspend fun getBoxCount():Long
 
     suspend fun getTransportCount():Long
+
+    suspend fun getKammerId(parentBoxId:Long, goalTemp:Float):Long
 }

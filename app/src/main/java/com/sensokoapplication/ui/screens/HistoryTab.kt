@@ -16,10 +16,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sensokoapplication.R
 import com.sensokoapplication.db.BoxViewModel
+import com.sensokoapplication.db.Parameter
 import com.sensokoapplication.db.Transportbox
+
+
+@Composable
+fun History(boxViewModel: BoxViewModel,kammer :MutableState<String>){
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 30.dp),
+        verticalArrangement = Arrangement.SpaceEvenly
+
+    ){
+        Text("Kammer ${kammer.value}", modifier = Modifier.padding(bottom=10.dp),style = MaterialTheme.typography.h5)
+
+    }
+}
+
 
 @Composable
 fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxViewModel: BoxViewModel){
@@ -31,9 +50,11 @@ fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxView
         else -> 1
     }
     val listKammern = boxViewModel.listeKammern.value
+    val listeParameter = boxViewModel.listeParameter.value
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-            .fillMaxWidth().padding(top = 30.dp),
+            .fillMaxWidth()
+            .padding(top = 30.dp),
         verticalArrangement = Arrangement.SpaceEvenly
 
     ) {
@@ -42,20 +63,23 @@ fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxView
             InfoClickable(
                 label = "Live Temperatur",
                 info = listKammern[kammerInt].goalTemp.toString(),
-                openDialog = openDialog
+                openDialog = openDialog,
+                listeParameter = listeParameter
             )
             InfoClickable(
                 label = "Luftfeuchtigkeit",
                 info = "52%",
-                openDialog = openDialog
+                openDialog = openDialog,
+                listeParameter = listeParameter
             )
         }
         Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-            InfoClickable(label = "Lichstrahlung", info = "1", openDialog = openDialog)
+            InfoClickable(label = "Lichstrahlung", info = "1", openDialog = openDialog, listeParameter = listeParameter)
             InfoClickable(
                 label = "Ziel Temperatur",
                 info = listKammern[kammerInt].goalTemp.toString(),
-                openDialog = openDialog
+                openDialog = openDialog,
+                listeParameter = listeParameter
             )
         }
 
@@ -66,7 +90,8 @@ fun HistoryTab(transportbox: Transportbox, kammer :MutableState<String>, boxView
 fun InfoClickable(label: String,
                   info: String,
                   color: Color = Color.LightGray,
-                  openDialog :MutableState<Boolean>
+                  openDialog :MutableState<Boolean>,
+                  listeParameter: List<Parameter>
 ){
     Card(
         shape = RoundedCornerShape(8.dp), backgroundColor = color, modifier = Modifier
@@ -85,9 +110,15 @@ fun InfoClickable(label: String,
                  } )
             )
             Text(text = info, modifier = Modifier.padding(top = 5.dp))
+            Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                listeParameter.forEach {
+                    Text(text = it.temperatur.toString()+"  ",modifier = Modifier.padding(top = 5.dp,end = 3.dp),fontStyle = FontStyle.Italic, fontSize = 15.sp)
+                }
+            }
         }
     }
-     if(openDialog.value){
+
+     /*if(openDialog.value){
           AlertDialog(onDismissRequest = { openDialog.value = false}
           , title = {Text("")}
           , text = { Image(painter = painterResource(id = R.drawable.historytempbox), contentDescription = "History Temp")}
@@ -95,5 +126,5 @@ fun InfoClickable(label: String,
                   Text("X", color = Color.Black, modifier = Modifier.clickable { openDialog.value = false })
 
               })
-      }
+      }*/
 }
