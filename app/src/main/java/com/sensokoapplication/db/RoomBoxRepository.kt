@@ -86,6 +86,10 @@ class RoomBoxRepository(private val boxDao: BoxDao, private val transportDao: Tr
         return kammerDao.getKammerId(parentBoxId, goalTemp)
     }
 
+    override suspend fun getTransportFromId(tranportId: Long) : Transport {
+        return transportDao.getTransportById(tranportId)
+    }
+
 
     suspend fun updateBox(transportbox: Transportbox){
         boxDao.update(transportbox)

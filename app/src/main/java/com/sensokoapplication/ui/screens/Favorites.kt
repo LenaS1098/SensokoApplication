@@ -60,23 +60,51 @@ fun FavoritesScreen( navController: NavController, boxViewModel: BoxViewModel){
 @ExperimentalFoundationApi
 @Composable
 fun FancyItem(item: Transportbox, navController: NavController, boxViewModel: BoxViewModel){
+    val transport = boxViewModel.transportById.value
+    val clicked = remember {
+        mutableStateOf(false)
+    }
     Card(modifier = Modifier
         .padding(top = 10.dp, start = 20.dp, end = 20.dp)
         .combinedClickable(onLongClick = {
             boxViewModel.changeCurBox(item)
             navController.navigate("overview")
-        }, onClick = {})
+        }, onClick = {
+
+            clicked.value = !clicked.value
+            if(clicked.value){
+                boxViewModel.getTransportFromId(item.transportId)
+            }
+        })
         ,
         shape = RoundedCornerShape(8.dp), backgroundColor = Color.LightGray
     ) {
+        if(clicked.value){
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 40.dp)
+            ) {
+                BasicInfoBox(label = "Startpunkt", info = transport.origin)
+                BasicInfoBox(label = "Ankunftsziel", info = transport.destination)
+                BasicInfoBox(label = "Transport", info = transport.carrier)
+            }
+        }
+
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier
                 .padding(start = 10.dp)
                 .weight(1f)
                 .wrapContentWidth(Alignment.Start)) {
                 Text(text = item.label, style = MaterialTheme.typography.h6, modifier = Modifier.padding(top = 3.dp))
-                Text(text = if(item.hasArrived){item.arrival}else{""},modifier = Modifier.padding(bottom = 3.dp))
-                Divider()
+                Text("")
+               // Text(text = if(item.hasArrived){item.arrival}else{""},modifier = Modifier.padding(bottom = 3.dp))
+            }
+            if(item.hasArrived){
+                Row(){
+                   Text(text= item.arrival, modifier = Modifier.padding(top = 3.dp,bottom=3.dp))
+                }
             }
           /*  Image(painter = painterResource(id = R.drawable.ic_star), contentDescription = "FavoriteIcon", modifier = Modifier
                 .padding(end = 10.dp)

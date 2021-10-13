@@ -1,12 +1,16 @@
 package com.sensokoapplication.ui.screens
 
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,10 +23,11 @@ import com.sensokoapplication.db.Transportbox
 //Dient als Ersatz zum Scannen
 @Composable
 fun ScannerScreen(boxViewModel: BoxViewModel){
+    val context = LocalContext.current
     val boxId = boxViewModel.boxCount.value+1
     val transportId = boxViewModel.transportCount.value+1
 
-    var showBoxInfos by remember{mutableStateOf(false)}
+    var showBoxInfos by remember{mutableStateOf(true)}
     var showTransportInfos by remember{mutableStateOf(false)}
     var showKammerInfos by remember{mutableStateOf(false)}
 
@@ -53,7 +58,9 @@ fun ScannerScreen(boxViewModel: BoxViewModel){
     var goalTempC by remember { mutableStateOf("") }
     var medizinC by remember { mutableStateOf("") }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()
+    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize().verticalScroll(
+        ScrollState(0),true
+    )
         //.background(Color.LightGray)
     ) {
         Text("Box Scanner", modifier = Modifier
@@ -142,12 +149,13 @@ fun ScannerScreen(boxViewModel: BoxViewModel){
             OutlinedTextField(value = medizinC, onValueChange = {medizinC = it}, label = { Text(text = "Medizin*")})
         }
 
-        Button(modifier = Modifier.padding(top = 10.dp),
+        Button(modifier = Modifier.padding(top = 10.dp, bottom = 300.dp),
             onClick = {
-                val transport = Transport(carrier, transporter, origin, destination,ready,shipped,arrivalTransport)
-                boxViewModel.insertTransport(transport)
-                val transportbox = Transportbox(label,transportId,hasArrived, arrival)
-                boxViewModel.insertBox(transportbox)
+                if(goalTempA != "" && goalTempB != "" && goalTempC != "" && label != "" ){
+                    val transport = Transport(carrier, transporter, origin, destination,ready,shipped,arrivalTransport)
+                    boxViewModel.insertTransport(transport)
+                    val transportbox = Transportbox(label,transportId,hasArrived, arrival)
+                    boxViewModel.insertBox(transportbox)
 
 
                     val kammerA = Kammer(boxId,goalTempA.toFloat(),medizinA)
@@ -157,7 +165,11 @@ fun ScannerScreen(boxViewModel: BoxViewModel){
                     boxViewModel.insertKammer(kammerB)
                     boxViewModel.insertKammer(kammerC)
 
-
+                    Toast.makeText(context,"Transportbox wurde hinzugefügt",Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    Toast.makeText(context," Bitte geben Sie Daten ein",Toast.LENGTH_LONG).show()
+                }
                 Log.e("Insert","Box inserted")
             }, content = {Text("Scan")})
     }

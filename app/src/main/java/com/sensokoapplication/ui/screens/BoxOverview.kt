@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Observer
 import com.sensokoapplication.db.*
@@ -41,6 +42,10 @@ fun BoxOverviewScreen(boxViewModel: BoxViewModel) {
 @Composable
 fun BoxHeader(transportbox: Transportbox, currentKammer : MutableState<String>,boxViewModel: BoxViewModel) {
 
+    val textAColor = remember { mutableStateOf(Color.Red) }
+    val textBColor  = remember { mutableStateOf(Color.White) }
+    val textCColor  = remember { mutableStateOf(Color.White) }
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Card(
             modifier = Modifier
@@ -51,7 +56,9 @@ fun BoxHeader(transportbox: Transportbox, currentKammer : MutableState<String>,b
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 20.dp), horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(bottom = 20.dp)
+                    .height(250.dp)
+                , horizontalAlignment = Alignment.CenterHorizontally
             ) {
                     Text(
                         text = transportbox.label,
@@ -61,8 +68,11 @@ fun BoxHeader(transportbox: Transportbox, currentKammer : MutableState<String>,b
 
                 Image(
                     painter = painterResource(id = R.drawable.transportbox),
+                    contentScale = ContentScale.Crop,
                     contentDescription = " Platzhalterbild Transportbox",
-                    modifier = Modifier.padding(start = 5.dp, end = 5.dp, top = 5.dp)
+                    modifier = Modifier
+                        .padding(start = 5.dp, end = 5.dp, top = 5.dp)
+                        .height(150.dp),
                 )
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier
@@ -71,20 +81,29 @@ fun BoxHeader(transportbox: Transportbox, currentKammer : MutableState<String>,b
                 ) {
                     Text("A", modifier = Modifier.clickable {
                         currentKammer.value = "A"
+                        textAColor.value = Color.Red
+                        textBColor.value = Color.White
+                        textCColor.value = Color.White
                         boxViewModel.currentKammer.value = boxViewModel.listeKammern.value[0]
                         boxViewModel.changeCurKammer(boxViewModel.listeKammern.value[0])
-                    })
+                    }.padding(top=10.dp), color = textAColor.value)
                     Text("B", modifier = Modifier.clickable {
                         currentKammer.value = "B"
+                        textAColor.value = Color.White
+                        textBColor.value = Color.Red
+                        textCColor.value = Color.White
                         boxViewModel.currentKammer.value = boxViewModel.listeKammern.value[1]
                         boxViewModel.changeCurKammer(boxViewModel.listeKammern.value[1])
-                    })
+                    }.padding(top=10.dp), color = textBColor.value)
                     Text("C", modifier = Modifier.clickable {
                         currentKammer.value = "C"
+                        textAColor.value = Color.White
+                        textBColor.value = Color.White
+                        textCColor.value = Color.Red
                         boxViewModel.currentKammer.value = boxViewModel.listeKammern.value[2]
                         boxViewModel.changeCurKammer(boxViewModel.listeKammern.value[2])
 
-                    })
+                    }.padding(top=10.dp), color = textCColor.value)
 
                 }
             }

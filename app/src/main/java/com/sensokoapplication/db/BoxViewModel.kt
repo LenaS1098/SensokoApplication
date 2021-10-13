@@ -18,6 +18,7 @@ class BoxViewModel(private val boxRepository: BoxRepository) : ViewModel() {
     val currentKammer: MutableState<Kammer> = mutableStateOf(emptyKammer)
     val listeKammern: MutableState<List<Kammer>> = mutableStateOf(listOf())
 
+    val transportById: MutableState<Transport> = mutableStateOf(emptyTransport)
 
     val transportCount: MutableState<Long> = mutableStateOf(-1)
     val boxCount: MutableState<Long> = mutableStateOf(-1)
@@ -104,6 +105,12 @@ class BoxViewModel(private val boxRepository: BoxRepository) : ViewModel() {
         val curKammer = allKammern[kammerIndex]
         viewModelScope.launch {
             listeParameter.value = boxRepository.getParameterFromKammer(curKammer.kammerId)
+        }
+    }
+
+    fun getTransportFromId(transportId: Long){
+        viewModelScope.launch {
+            transportById.value = boxRepository.getTransportFromId(transportId)
         }
     }
 
