@@ -18,8 +18,9 @@ class BoxViewModel(private val boxRepository: BoxRepository) : ViewModel() {
     val currentKammer: MutableState<Kammer> = mutableStateOf(emptyKammer)
     val listeKammern: MutableState<List<Kammer>> = mutableStateOf(listOf())
 
-    val transportById: MutableState<Transport> = mutableStateOf(emptyTransport)
+   // val transportById: MutableState<Transport> = mutableStateOf(emptyTransport)
 
+    val transportList: MutableState<List<Transport>> = mutableStateOf(listOf())
     val transportCount: MutableState<Long> = mutableStateOf(-1)
     val boxCount: MutableState<Long> = mutableStateOf(-1)
 
@@ -36,6 +37,7 @@ class BoxViewModel(private val boxRepository: BoxRepository) : ViewModel() {
             transportCount.value = boxRepository.getTransportCount()
             boxCount.value = boxRepository.getBoxCount()
             currentKammer.value = listeKammern.value[0]
+            transportList.value = boxRepository.getTransportList()
         }
     }
 
@@ -108,10 +110,5 @@ class BoxViewModel(private val boxRepository: BoxRepository) : ViewModel() {
         }
     }
 
-    fun getTransportFromId(transportId: Long){
-        viewModelScope.launch {
-            transportById.value = boxRepository.getTransportFromId(transportId)
-        }
-    }
 
 }

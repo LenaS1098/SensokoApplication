@@ -57,7 +57,7 @@ fun BoxHeader(transportbox: Transportbox, currentKammer : MutableState<String>,b
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 20.dp)
-                    .height(250.dp)
+                   // .height(250.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ) {
                     Text(
@@ -72,7 +72,7 @@ fun BoxHeader(transportbox: Transportbox, currentKammer : MutableState<String>,b
                     contentDescription = " Platzhalterbild Transportbox",
                     modifier = Modifier
                         .padding(start = 5.dp, end = 5.dp, top = 5.dp)
-                        .height(150.dp),
+                      //  .height(150.dp),
                 )
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier

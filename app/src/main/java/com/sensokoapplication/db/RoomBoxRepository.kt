@@ -90,6 +90,10 @@ class RoomBoxRepository(private val boxDao: BoxDao, private val transportDao: Tr
         return transportDao.getTransportById(tranportId)
     }
 
+    override suspend fun getTransportList(): List<Transport> {
+        return transportDao.getAllTransports()
+    }
+
 
     suspend fun updateBox(transportbox: Transportbox){
         boxDao.update(transportbox)

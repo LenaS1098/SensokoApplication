@@ -1,5 +1,6 @@
 package com.sensokoapplication.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -11,7 +12,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sensokoapplication.db.Transportbox
 import com.sensokoapplication.db.BoxViewModel
+import com.sensokoapplication.db.Transport
 
 
 @ExperimentalFoundationApi
@@ -60,21 +62,19 @@ fun FavoritesScreen( navController: NavController, boxViewModel: BoxViewModel){
 @ExperimentalFoundationApi
 @Composable
 fun FancyItem(item: Transportbox, navController: NavController, boxViewModel: BoxViewModel){
-    val transport = boxViewModel.transportById.value
     val clicked = remember {
         mutableStateOf(false)
     }
+    val transportList = boxViewModel.transportList.value
+
+
     Card(modifier = Modifier
         .padding(top = 10.dp, start = 20.dp, end = 20.dp)
         .combinedClickable(onLongClick = {
             boxViewModel.changeCurBox(item)
             navController.navigate("overview")
         }, onClick = {
-
             clicked.value = !clicked.value
-            if(clicked.value){
-                boxViewModel.getTransportFromId(item.transportId)
-            }
         })
         ,
         shape = RoundedCornerShape(8.dp), backgroundColor = Color.LightGray
@@ -86,9 +86,17 @@ fun FancyItem(item: Transportbox, navController: NavController, boxViewModel: Bo
                     .fillMaxWidth()
                     .padding(top = 40.dp)
             ) {
-                BasicInfoBox(label = "Startpunkt", info = transport.origin)
-                BasicInfoBox(label = "Ankunftsziel", info = transport.destination)
-                BasicInfoBox(label = "Transport", info = transport.carrier)
+                var transport: Transport =   Transport("Fehler","Fehler","Fehler","Fehler")
+                transportList.forEach {
+                     if(it.transportId == item.transportId){
+                        transport = it
+                    }
+                }
+                    BasicInfoBox(label = "Startpunkt", info = transport.origin)
+                    BasicInfoBox(label = "Ankunftsziel", info = transport.destination)
+                    BasicInfoBox(label = "Transport", info = transport.carrier)
+
+
             }
         }
 
